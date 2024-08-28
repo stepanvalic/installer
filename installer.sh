@@ -6,6 +6,7 @@ install_packages() {
     # Sem můžete vložit příkazy pro instalaci balíčků
     sudo apt update
     sudo apt install -y curl wget git tmux htop
+    clear
     echo "Prvotní balíčky byly úspěšně nainstalovány."
 }
 
