@@ -117,8 +117,8 @@ case $choice in
         install_FiveM
         ;;
     *)
-        echo "Neplatná volba!"
+        echo -e "\033[31mNeplatná volba!\033[0m"
         ;;
 esac
 
-echo "Instalace dokončena!"
+echo -e "\033[32mInstalace dokončena!\033[0m"
