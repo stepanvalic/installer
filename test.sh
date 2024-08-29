@@ -122,3 +122,99 @@ case $choice in
 esac
 
 echo -e "\033[32mInstalace dokončena!\033[0m"
+
+
+# #!/bin/bash
+
+# # Funkce pro instalaci závislostí
+# install_dependencies() {
+#     echo "Aktualizace balíčků a instalace závislostí..."
+#     sudo apt update
+#     sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1 tmux xf php php-mysql
+# }
+
+# # Funkce pro instalaci Minecraft serveru
+# install_minecraft() {
+#     # ... (stejný kód jako v předchozím příkladu)
+# }
+
+# # Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
+# install_7d2d() {
+#     # ... (stejný kód jako v předchozím příkladu)
+# }
+
+# # Funkce pro instalaci FiveM
+# install_FiveM() {
+#     # ... (stejný kód jako v předchozím příkladu)
+# }
+
+# # Funkce pro instalaci phpMyAdmin
+# install_phpmyadmin() {
+#     echo "Instalace phpMyAdmin..."
+#     sudo apt install -y phpmyadmin
+
+#     # Získání hesla pro MySQL root uživatele
+#     read -p "Zadat heslo pro root uživatele (y/n)? " answer
+#     if [[ "$answer" == "y" || "$answer" == "Y" ]]; then
+#         read -p "Heslo: " root_password
+#     else
+#         # Vygenerování náhodného silného hesla
+#         root_password=$(openssl rand -base64 32)
+#         echo "Vygenerované heslo: $root_password"
+#     fi
+
+#     # Nastavení hesla pro root uživatele v MySQL
+#     sudo mysql -u root -e "UPDATE mysql.user SET password=PASSWORD('$root_password') WHERE User='root';"
+#     sudo mysql -u root -e "FLUSH PRIVILEGES;"
+
+#     # Dotazování na speciálního uživatele
+#     read -p "Chcete vytvořit dalšího uživatele? (y/n): " create_user
+#     if [[ "$create_user" == "y" || "$create_user" == "Y" ]]; then
+#         read -p "Uživatelské jméno: " username
+#         read -p "Heslo: " password
+
+#         # Vytvoření uživatele v MySQL
+#         sudo mysql -u root -e "CREATE USER '$username'@'localhost' IDENTIFIED BY '$password';"
+#         sudo mysql -u root -e "GRANT ALL PRIVILEGES ON *.* TO '$username'@'localhost';"
+#     fi
+
+#     # Výpis hesla a uživatelských jmen
+#     echo -e "\nHesla a uživatelská jména:"
+#     echo "Root: $root_password"
+#     if [[ "$create_user" == "y" || "$create_user" == "Y" ]]; then
+#         echo "$username: $password"
+#     fi
+#     echo -e "\n"
+# }
+
+# # Menu pro výběr instalace
+# echo "Vyberte, co chcete nainstalovat:"
+# echo "1) Minecraft server"
+# echo "2) 7 Days to Die server"
+# echo "3) FiveM server"
+# echo "4) phpMyAdmin"
+# read -p "Vaše volba: " choice
+
+# case $choice in
+#     1)
+#         install_dependencies
+#         install_minecraft
+#         ;;
+#     2)
+#         install_dependencies
+#         install_7d2d
+#         ;;
+#     3)
+#         install_dependencies
+#         install_FiveM
+#         ;;
+#     4)
+#         install_dependencies
+#         install_phpmyadmin
+#         ;;
+#     *)
+#         echo -e "\033[31mNeplatná volba!\033[0m"
+#         ;;
+# esac
+
+# echo -e "\033[32mInstalace dokončena!\033[0m"
