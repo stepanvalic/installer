@@ -78,7 +78,7 @@ install_FiveM(){
       ip_address=$(hostname -I | awk '{print $2}')
     fi
 
-    #echo "IP adresa serveru: $ip_address"  
+    echo "IP adresa serveru: $ip_address"  
 
 
     mkdir -p FiveM
