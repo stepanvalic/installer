@@ -72,6 +72,15 @@ install_7d2d() {
 }
 
 install_FiveM(){
+    ip_address=$(hostname -I | awk '{print $1}')
+
+    if [[ -z "$ip_address" ]]; then
+      ip_address=$(hostname -I | awk '{print $2}')
+    fi
+
+    #echo "IP adresa serveru: $ip_address"  
+
+
     mkdir -p FiveM
     cd FiveM
     echo "https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/" 
@@ -85,7 +94,9 @@ install_FiveM(){
     echo "Instaluji screen pro běh na pozadí"
     apt install screen
     screen ./run.sh
-    echo "váš server bězí"
+    echo "váš server bězí na: $ip_address:40120" 
+
+
 
 }
 
