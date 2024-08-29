@@ -4,7 +4,7 @@
 install_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1
 }
 
 # Funkce pro instalaci Minecraft serveru
@@ -63,14 +63,20 @@ install_minecraft() {
     echo "Minecraft server byl nainstalován a spuštěn!"
 }
 
-# Funkce pro instalaci 7 Days to Die serveru
+# Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
 install_7d2d() {
-    echo "Instalace 7 Days to Die serveru..."
-    mkdir -p 7d2d-server
-    cd 7d2d-server
+    echo "Instalace 7 Days to Die serveru pomocí SteamCMD..."
+    
+    # Stažení a instalace SteamCMD
+    mkdir -p steamcmd
+    cd steamcmd
+    wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
+    tar -xvzf steamcmd_linux.tar.gz
 
-    wget https://fileserver.7daystodie.com/Alpha20/7DaysToDieServer_20.0.zip -O 7d2d-server.zip
-    unzip 7d2d-server.zip
+    # Stažení a instalace 7 Days to Die serveru
+    ./steamcmd.sh +login anonymous +force_install_dir ../7d2d-server +app_update 294420 validate +quit
+
+    cd ../7d2d-server
 
     # Automatické spuštění serveru
     echo "Spouštění 7 Days to Die serveru..."
@@ -80,20 +86,10 @@ install_7d2d() {
     echo "7 Days to Die server byl nainstalován a spuštěn!"
 }
 
-# Funkce pro instalaci PHPMyAdmin s AppCache
-install_phpmyadmin() {
-    echo "Instalace PHPMyAdmin a AppCache..."
-    sudo apt update
-    sudo apt install -y phpmyadmin appcache
-
-    echo "PHPMyAdmin a AppCache byly nainstalovány!"
-}
-
 # Menu pro výběr instalace
 echo "Vyberte, co chcete nainstalovat:"
 echo "1) Minecraft server"
 echo "2) 7 Days to Die server"
-echo "3) PHPMyAdmin s AppCache"
 read -p "Vaše volba: " choice
 
 case $choice in
@@ -102,10 +98,8 @@ case $choice in
         install_minecraft
         ;;
     2)
+        install_dependencies
         install_7d2d
-        ;;
-    3)
-        install_phpmyadmin
         ;;
     *)
         echo "Neplatná volba!"
