@@ -4,7 +4,7 @@
 install_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1 tmux
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1
 }
 
 # Funkce pro instalaci Minecraft serveru
@@ -44,10 +44,11 @@ install_minecraft() {
 
     echo "eula=true" > eula.txt
 
-    # Spuštění serveru v tmux
-    tmux new-session -d -s minecraft "java -Xmx1024M -Xms1024M -jar $(ls *.jar) nogui"
+    # Spuštění serveru přímo v aktuálním terminálu
+    java -Xmx1024M -Xms1024M -jar $(ls *.jar) nogui
+
     cd ..
-    echo "Minecraft server byl nainstalován a spuštěn v tmux relaci 'minecraft'!"
+    echo "Minecraft server byl nainstalován a spuštěn!"
 }
 
 # Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
@@ -63,23 +64,11 @@ install_7d2d() {
 
     cd ../7d2d-server
 
-    # Spuštění serveru v tmux
-    tmux new-session -d -s 7d2d "./startserver.sh -configfile=serverconfig.xml"
+    # Spuštění serveru přímo v aktuálním terminálu
+    ./startserver.sh -configfile=serverconfig.xml
 
     cd ..
-    echo "7 Days to Die server byl nainstalován a spuštěn v tmux relaci '7d2d'!"
-}
-
-# Nastavení rozložení v tmux
-setup_tmux_layout() {
-    tmux new-session -d -s servers
-    tmux rename-window -t servers "Server Management"
-    tmux split-window -v -p 50
-    tmux select-pane -t 0
-    tmux send-keys "tmux attach-session -t minecraft" C-m
-    tmux select-pane -t 1
-    tmux send-keys "tmux attach-session -t 7d2d" C-m
-    tmux attach-session -t servers
+    echo "7 Days to Die server byl nainstalován a spuštěn!"
 }
 
 # Menu pro výběr instalace
@@ -102,7 +91,4 @@ case $choice in
         ;;
 esac
 
-# Nastavení a spuštění tmux layoutu
-setup_tmux_layout
-
-echo "Instalace dokončena a servery běží v tmux relacích!"
+echo "Instalace dokončena!"
