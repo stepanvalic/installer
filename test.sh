@@ -4,7 +4,7 @@
 install_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen
 }
 
 # Funkce pro instalaci Minecraft serveru
@@ -17,6 +17,9 @@ install_minecraft() {
     read -p "Vaše volba: " mc_version
 
     read -p "Zadejte verzi Minecraftu (např. 1.19.4): " mc_version_number
+
+    mkdir -p minecraft-server
+    cd minecraft-server
 
     case $mc_version in
         1)
@@ -38,25 +41,43 @@ install_minecraft() {
             ;;
         *)
             echo "Neplatná volba!"
+            cd ..
             return
             ;;
     esac
 
-    echo "Minecraft server byl nainstalován!"
+    # Automatické spuštění serveru
+    echo "eula=true" > eula.txt
+    echo "Spouštění Minecraft serveru..."
+    if [ "$mc_version" == "1" ]; then
+        java -Xmx1024M -Xms1024M -jar minecraft_server.jar nogui
+    elif [ "$mc_version" == "2" ]; then
+        java -Xmx1024M -Xms1024M -jar spigot.jar nogui
+    elif [ "$mc_version" == "3" ]; then
+        java -Xmx1024M -Xms1024M -jar forge-$mc_version_number-universal.jar nogui
+    elif [ "$mc_version" == "4" ]; then
+        java -Xmx1024M -Xms1024M -jar paper.jar nogui
+    fi
+
+    cd ..
+    echo "Minecraft server byl nainstalován a spuštěn!"
 }
 
 # Funkce pro instalaci 7 Days to Die serveru
 install_7d2d() {
     echo "Instalace 7 Days to Die serveru..."
-    read -p "Zadejte verzi 7 Days to Die (např. alpha19.5): " d2d_version
-
-    mkdir 7d2d-server
+    mkdir -p 7d2d-server
     cd 7d2d-server
 
-    wget https://7d2d.org/downloads/7d2d/7d2d-${d2d_version}.tar.gz -O 7d2d-server.tar.gz
-    tar -xzf 7d2d-server.tar.gz
-    echo "7 Days to Die server byl nainstalován!"
+    wget https://fileserver.7daystodie.com/Alpha20/7DaysToDieServer_20.0.zip -O 7d2d-server.zip
+    unzip 7d2d-server.zip
+
+    # Automatické spuštění serveru
+    echo "Spouštění 7 Days to Die serveru..."
+    screen -S 7d2d-server ./startserver.sh -configfile=serverconfig.xml
+
     cd ..
+    echo "7 Days to Die server byl nainstalován a spuštěn!"
 }
 
 # Funkce pro instalaci PHPMyAdmin s AppCache
