@@ -4,7 +4,7 @@
 install_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1 tmux xf
 }
 
 # Funkce pro instalaci Minecraft serveru
@@ -71,10 +71,28 @@ install_7d2d() {
     echo "7 Days to Die server byl nainstalován a spuštěn!"
 }
 
+install_FiveM(){
+    mkdir -p FiveM
+    cd FiveM
+    echo "Vložte odkaz na FiveM Linux stažení (https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/)"
+    read build_link
+    wget $build_link
+    echo "Rozbalují se soubory"
+    tar xf fx.tar.xz
+    echo "Soubory byli úspěšně rozbaleny"
+    rm -r fx.tar.xz
+    echo "Instaluji screen pro běh na pozadí"
+    apt install screen
+    screen ./run.sh
+    echo "váš server bězí"
+
+}
+
 # Menu pro výběr instalace
 echo "Vyberte, co chcete nainstalovat:"
 echo "1) Minecraft server"
 echo "2) 7 Days to Die server"
+echo "3) FiveM server"
 read -p "Vaše volba: " choice
 
 case $choice in
@@ -85,6 +103,10 @@ case $choice in
     2)
         install_dependencies
         install_7d2d
+        ;;
+    3)
+        install_dependencies
+        install_FiveM
         ;;
     *)
         echo "Neplatná volba!"
