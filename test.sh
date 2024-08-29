@@ -74,7 +74,8 @@ install_7d2d() {
 install_FiveM(){
     mkdir -p FiveM
     cd FiveM
-    echo "Vložte odkaz na FiveM Linux stažení ( https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/" ")"
+    echo "https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/" 
+    echo "Vložte odkaz na FiveM Linux stažení:"
     read build_link
     wget $build_link
     echo "Rozbalují se soubory"
