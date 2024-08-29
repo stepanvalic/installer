@@ -4,7 +4,7 @@
 install_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1 tmux
 }
 
 # Funkce pro instalaci Minecraft serveru
@@ -23,20 +23,16 @@ install_minecraft() {
 
     case $mc_version in
         1)
-            # Instalace Vanilla serveru
             wget https://launcher.mojang.com/v1/objects/1c5c77d5b8ffb2cabc690c20b11f7b5462d5b74c/server.jar -O minecraft_server.jar
             ;;
         2)
-            # Instalace Spigot serveru
             wget https://download.getbukkit.org/spigot/spigot-$mc_version_number.jar -O spigot.jar
             ;;
         3)
-            # Instalace Forge serveru
             wget https://maven.minecraftforge.net/net/minecraftforge/forge/$mc_version_number/forge-$mc_version_number-installer.jar -O forge-installer.jar
             java -jar forge-installer.jar --installServer
             ;;
         4)
-            # Instalace Paper serveru
             wget https://papermc.io/api/v2/projects/paper/versions/$mc_version_number/builds/latest/downloads/paper-$mc_version_number-latest.jar -O paper.jar
             ;;
         *)
@@ -46,44 +42,44 @@ install_minecraft() {
             ;;
     esac
 
-    # Automatické spuštění serveru
     echo "eula=true" > eula.txt
-    echo "Spouštění Minecraft serveru..."
-    if [ "$mc_version" == "1" ]; then
-        java -Xmx1024M -Xms1024M -jar minecraft_server.jar nogui
-    elif [ "$mc_version" == "2" ]; then
-        java -Xmx1024M -Xms1024M -jar spigot.jar nogui
-    elif [ "$mc_version" == "3" ]; then
-        java -Xmx1024M -Xms1024M -jar forge-$mc_version_number-universal.jar nogui
-    elif [ "$mc_version" == "4" ]; then
-        java -Xmx1024M -Xms1024M -jar paper.jar nogui
-    fi
 
+    # Spuštění serveru v tmux
+    tmux new-session -d -s minecraft "java -Xmx1024M -Xms1024M -jar $(ls *.jar) nogui"
     cd ..
-    echo "Minecraft server byl nainstalován a spuštěn!"
+    echo "Minecraft server byl nainstalován a spuštěn v tmux relaci 'minecraft'!"
 }
 
 # Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
 install_7d2d() {
     echo "Instalace 7 Days to Die serveru pomocí SteamCMD..."
-    
-    # Stažení a instalace SteamCMD
+
     mkdir -p steamcmd
     cd steamcmd
     wget https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz
     tar -xvzf steamcmd_linux.tar.gz
 
-    # Stažení a instalace 7 Days to Die serveru
     ./steamcmd.sh +login anonymous +force_install_dir ../7d2d-server +app_update 294420 validate +quit
 
     cd ../7d2d-server
 
-    # Automatické spuštění serveru
-    echo "Spouštění 7 Days to Die serveru..."
-    screen -S 7d2d-server ./startserver.sh -configfile=serverconfig.xml
+    # Spuštění serveru v tmux
+    tmux new-session -d -s 7d2d "./startserver.sh -configfile=serverconfig.xml"
 
     cd ..
-    echo "7 Days to Die server byl nainstalován a spuštěn!"
+    echo "7 Days to Die server byl nainstalován a spuštěn v tmux relaci '7d2d'!"
+}
+
+# Nastavení rozložení v tmux
+setup_tmux_layout() {
+    tmux new-session -d -s servers
+    tmux rename-window -t servers "Server Management"
+    tmux split-window -v -p 50
+    tmux select-pane -t 0
+    tmux send-keys "tmux attach-session -t minecraft" C-m
+    tmux select-pane -t 1
+    tmux send-keys "tmux attach-session -t 7d2d" C-m
+    tmux attach-session -t servers
 }
 
 # Menu pro výběr instalace
@@ -106,4 +102,7 @@ case $choice in
         ;;
 esac
 
-echo "Instalace dokončena!"
+# Nastavení a spuštění tmux layoutu
+setup_tmux_layout
+
+echo "Instalace dokončena a servery běží v tmux relacích!"
