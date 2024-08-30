@@ -123,6 +123,13 @@ install_FiveM(){
 install_phpmyadmin() {
     install_phpmyadmin_dependencies
 
+    echo -e "\033[33mUpozornění: Instalace PHPMyAdmin nemusí být plně funkční.\033[0m"
+    read -p "Pokud si toho jste vědomi a chcete pokračovat, zadejte 'ano': " confirmation
+    if [ "$confirmation" != "ano" ]; then
+        echo -e "\033[31mInstalace PHPMyAdmin byla zrušena.\033[0m"
+        return
+    fi
+
     echo "Instalace PHPMyAdmin..."
 
     sudo mysql_secure_installation
