@@ -1,34 +1,29 @@
 #!/bin/bash
 
-# Funkce pro instalaci závislostí pro Minecraft
 install_minecraft_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí pro Minecraft server..."
     sudo apt update
     sudo apt install -y openjdk-17-jre-headless wget unzip tar curl
 }
 
-# Funkce pro instalaci závislostí pro 7 Days to Die
 install_7d2d_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí pro 7 Days to Die server..."
     sudo apt update
     sudo apt install -y wget tar git curl screen lib32gcc-s1
 }
 
-# Funkce pro instalaci závislostí pro FiveM
 install_fivem_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí pro FiveM server..."
     sudo apt update
     sudo apt install -y wget tar curl screen
 }
 
-# Funkce pro instalaci závislostí pro PHPMyAdmin
 install_phpmyadmin_dependencies() {
     echo "Aktualizace balíčků a instalace závislostí pro PHPMyAdmin..."
     sudo apt update
     sudo apt install -y apache2 php libapache2-mod-php php-mysql mariadb-server mariadb-client
 }
 
-# Funkce pro instalaci Minecraft serveru
 install_minecraft() {
     install_minecraft_dependencies
 
@@ -67,14 +62,12 @@ install_minecraft() {
 
     echo "eula=true" > eula.txt
 
-    # Spuštění serveru přímo v aktuálním terminálu
     java -Xmx1024M -Xms1024M -jar $(ls *.jar) nogui
 
     cd ..
     echo "Minecraft server byl nainstalován a spuštěn!"
 }
 
-# Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
 install_7d2d() {
     install_7d2d_dependencies
 
@@ -89,14 +82,12 @@ install_7d2d() {
 
     cd ../7d2d-server
 
-    # Spuštění serveru přímo v aktuálním terminálu
     ./startserver.sh -configfile=serverconfig.xml
 
     cd ..
     echo "7 Days to Die server byl nainstalován a spuštěn!"
 }
 
-# Funkce pro instalaci FiveM serveru
 install_FiveM(){
     install_fivem_dependencies
 
@@ -119,7 +110,6 @@ install_FiveM(){
     echo "Váš server běží na: $ip_address:40120" 
 }
 
-# Funkce pro instalaci a konfiguraci PHPMyAdmin
 install_phpmyadmin() {
 
     echo -e "\033[33mUpozornění: Instalace PHPMyAdmin nemusí být plně funkční.\033[0m"
@@ -178,7 +168,6 @@ install_CasaOS() {
     curl -fsSL https://get.casaos.io | sudo bash
 }
 
-# Menu pro výběr instalace
 echo "Vyberte, co chcete nainstalovat:"
 echo "1) Minecraft server"
 echo "2) 7 Days to Die server"
