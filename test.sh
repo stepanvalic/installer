@@ -1,14 +1,37 @@
 #!/bin/bash
 
-# Funkce pro instalaci závislostí
-install_dependencies() {
-    echo "Aktualizace balíčků a instalace závislostí..."
+# Funkce pro instalaci závislostí pro Minecraft
+install_minecraft_dependencies() {
+    echo "Aktualizace balíčků a instalace závislostí pro Minecraft server..."
     sudo apt update
-    sudo apt install -y openjdk-17-jre-headless wget unzip tar git curl screen lib32gcc-s1 tmux apache2 php libapache2-mod-php php-mysql
+    sudo apt install -y openjdk-17-jre-headless wget unzip tar curl
+}
+
+# Funkce pro instalaci závislostí pro 7 Days to Die
+install_7d2d_dependencies() {
+    echo "Aktualizace balíčků a instalace závislostí pro 7 Days to Die server..."
+    sudo apt update
+    sudo apt install -y wget tar git curl screen lib32gcc-s1
+}
+
+# Funkce pro instalaci závislostí pro FiveM
+install_fivem_dependencies() {
+    echo "Aktualizace balíčků a instalace závislostí pro FiveM server..."
+    sudo apt update
+    sudo apt install -y wget tar curl screen
+}
+
+# Funkce pro instalaci závislostí pro PHPMyAdmin
+install_phpmyadmin_dependencies() {
+    echo "Aktualizace balíčků a instalace závislostí pro PHPMyAdmin..."
+    sudo apt update
+    sudo apt install -y apache2 php libapache2-mod-php php-mysql mariadb-server mariadb-client
 }
 
 # Funkce pro instalaci Minecraft serveru
 install_minecraft() {
+    install_minecraft_dependencies
+
     echo "Vyberte verzi Minecraft serveru:"
     echo "1) Vanilla"
     echo "2) Spigot"
@@ -53,6 +76,8 @@ install_minecraft() {
 
 # Funkce pro instalaci 7 Days to Die serveru pomocí SteamCMD
 install_7d2d() {
+    install_7d2d_dependencies
+
     echo "Instalace 7 Days to Die serveru pomocí SteamCMD..."
 
     mkdir -p steamcmd
@@ -73,6 +98,8 @@ install_7d2d() {
 
 # Funkce pro instalaci FiveM serveru
 install_FiveM(){
+    install_fivem_dependencies
+
     mkdir -p FiveM
     cd FiveM
     echo "https://runtime.fivem.net/artifacts/fivem/build_proot_linux/master/" 
@@ -84,7 +111,6 @@ install_FiveM(){
     echo "Soubory byly úspěšně rozbaleny"
     rm -r fx.tar.xz
     echo "Instaluji screen pro běh na pozadí"
-    apt install screen
     screen ./run.sh
     ip_address=$(hostname -I | awk '{print $1}')
     if [[ -z "$ip_address" ]]; then
@@ -93,12 +119,13 @@ install_FiveM(){
     echo "Váš server běží na: $ip_address:40120" 
 }
 
-# Funkce pro instalaci PHPMyAdmin
+# Funkce pro instalaci a konfiguraci PHPMyAdmin
 install_phpmyadmin() {
+    install_phpmyadmin_dependencies
+
     echo "Instalace PHPMyAdmin..."
 
-    sudo apt update
-    sudo apt install -y phpmyadmin
+    sudo mysql_secure_installation
 
     echo "Vytvořit speciálního uživatele kromě roota? (y/n)"
     read create_user
@@ -125,6 +152,10 @@ install_phpmyadmin() {
         echo "Generované heslo pro roota: $root_password"
     fi
 
+    sudo apt install -y phpmyadmin
+
+    sudo ln -s /usr/share/phpmyadmin /var/www/html/phpmyadmin
+
     echo "Instalace PHPMyAdmin dokončena."
     echo "Přístupové údaje:"
     if [ "$create_user" == "y" ]; then
@@ -145,19 +176,15 @@ read -p "Vaše volba: " choice
 
 case $choice in
     1)
-        install_dependencies
         install_minecraft
         ;;
     2)
-        install_dependencies
         install_7d2d
         ;;
     3)
-        install_dependencies
         install_FiveM
         ;;
     4)
-        install_dependencies
         install_phpmyadmin
         ;;
     *)
