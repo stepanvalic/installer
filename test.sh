@@ -121,7 +121,6 @@ install_FiveM(){
 
 # Funkce pro instalaci a konfiguraci PHPMyAdmin
 install_phpmyadmin() {
-    install_phpmyadmin_dependencies
 
     echo -e "\033[33mUpozornění: Instalace PHPMyAdmin nemusí být plně funkční.\033[0m"
     read -p "Pokud si toho jste vědomi a chcete pokračovat, zadejte 'ano': " confirmation
@@ -129,6 +128,8 @@ install_phpmyadmin() {
         echo -e "\033[31mInstalace PHPMyAdmin byla zrušena.\033[0m"
         return
     fi
+    
+    install_phpmyadmin_dependencies
 
     echo "Instalace PHPMyAdmin..."
 
