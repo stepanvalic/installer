@@ -33,7 +33,7 @@ install_minecraft() {
     install_minecraft_dependencies
 
     echo "Vyberte verzi Minecraft serveru:"
-    echo "1) Vanilla"
+    echo "1) Vanilla asi nefunguje  "
     echo "2) Spigot"
     echo "3) Forge"
     echo "4) Paper"
@@ -128,7 +128,7 @@ install_phpmyadmin() {
         echo -e "\033[31mInstalace PHPMyAdmin byla zrušena.\033[0m"
         return
     fi
-    
+
     install_phpmyadmin_dependencies
 
     echo "Instalace PHPMyAdmin..."
@@ -174,12 +174,17 @@ install_phpmyadmin() {
     echo "Heslo: $root_password"
 }
 
+install_CasaOS() {
+    curl -fsSL https://get.casaos.io | sudo bash
+}
+
 # Menu pro výběr instalace
 echo "Vyberte, co chcete nainstalovat:"
 echo "1) Minecraft server"
 echo "2) 7 Days to Die server"
 echo "3) FiveM server"
 echo "4) PHPMyAdmin"
+echo "5) CasaOS"
 read -p "Vaše volba: " choice
 
 case $choice in
@@ -194,6 +199,9 @@ case $choice in
         ;;
     4)
         install_phpmyadmin
+        ;;
+    5)
+        install_CasaOS
         ;;
     *)
         echo -e "\033[31mNeplatná volba!\033[0m"
